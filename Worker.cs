@@ -17,7 +17,7 @@ public class Worker : IHostedService
     
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        string token = Environment.GetEnvironmentVariable("DiscordBotToken");
+        string token = Environment.GetEnvironmentVariable("DISCORD_BOT_TOKEN");
         return Task.CompletedTask;
     }
     
