@@ -1,0 +1,29 @@
+name: Deploy Discord Bot
+
+on: 
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.101'  # Change to your .NET version
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run Discord Bot
+        run: dotnet run --configuration Release
+        env:
+          DiscordBotToken: ${{ secrets.DISCORD_BOT_TOKEN }}
