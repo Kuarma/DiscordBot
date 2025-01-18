@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenAI;
+using OpenAI.Chat;
 using Serilog;
 
 namespace DiscordBot
@@ -20,12 +21,13 @@ namespace DiscordBot
             
             using IHost host = Host.CreateDefaultBuilder(args)
                 .UseSerilog()
-                .ConfigureServices((context, services) =>
+                .ConfigureServices((_, services) =>
                 {
-                    services.AddSingleton(new OpenAIClient(Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
+                    services.AddSingleton(new ChatClient("gpt-4o-mini",Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
+                    services.AddSingleton<GetOrCreateDesignatedDiscordChannel>(); 
                     services.AddSingleton(new DiscordSocketClient(new DiscordSocketConfig
                     {
-                        GatewayIntents = GatewayIntents.AllUnprivileged
+                        GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
                     }));
                     services.AddHostedService<Worker>();
                 })
